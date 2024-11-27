@@ -12,6 +12,25 @@ let score = 0;
 let gameLoop;
 let playerName = prompt("Enter your name:") || "Player";
 
+// Function to extend the player name based on the initial input and game progress
+function extendName(name, currentLength) {
+    // Determine if the input is lowercase or uppercase
+    const isLowerCase = name === name.toLowerCase();
+    const isUpperCase = name === name.toUpperCase();
+    const baseAlphabet = 'abcdefghijklmnopqrstuvwxyz';
+
+    // Determine the starting character and extend the name
+    let extendedName = name;
+
+    // Add characters from the base alphabet
+    let alphabet = isLowerCase ? baseAlphabet : baseAlphabet.toUpperCase();
+    for (let i = extendedName.length; i < currentLength; i++) {
+        extendedName += alphabet[i % 26];
+    }
+
+    return extendedName;
+}
+
 function drawGrid() {
     ctx.strokeStyle = '#c0c0c0'; // Light gray color for the grid
     ctx.lineWidth = 1; // Thickness of the grid lines
@@ -33,6 +52,7 @@ function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     drawGrid(); // Draw the grid first
 
+    //FOOD
     ctx.fillStyle = '#4a4a4a';// Color for the food
     ctx.font = '20px Arial';
     ctx.fillRect(food.x, food.y, gridSize, gridSize);
@@ -43,15 +63,15 @@ function draw() {
     //     ctx.fillRect(snake[i].x, snake[i].y, gridSize, gridSize);
     // }
 
+    //SNAKE
     // Draw the snake using the player's name as the pattern
+    let currentName = extendName(playerName, snake.length);
     ctx.fillStyle = 'green'; // Color of the snake's body
     ctx.font = '20px Arial'; // Adjust size to fit in the segments
     for (let i = 0; i < snake.length; i++) {
-        ctx.fillText(playerName[i % playerName.length], snake[i].x + gridSize / 4, snake[i].y + gridSize / 1.5);
+        ctx.fillText(currentName[i % currentName.length], snake[i].x + gridSize / 4, snake[i].y + gridSize / 1.5);
     }
 }
-
-
 
 function update() {
     const head = { x: snake[0].x + direction.x * gridSize, y: snake[0].y + direction.y * gridSize };
